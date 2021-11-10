@@ -58,23 +58,14 @@ const getById = async (req, res, next) => {
   try {
     const blog = await BlogModel.findById(req.params.blogId);
     if (blog) {
-      const comments = blog.comments.find(
-        (c) => c._id.toString() === req.params.commentId
-      );
+      const comments = blog.comments.find((c) => c._id.toString() === req.params.commentId)
       if (comments) {
         res.send(comments);
       } else {
-        next(
-          createHttpError(
-            404,
-            `Comment with id ${req.params.blogId} not found!`
-          )
-        );
+        next(createHttpError(404, `Comment with id ${req.params.blogId} not found!`))
       }
     } else {
-      next(
-        createHttpError(404, `Post with id ${req.params.blogId} not found!`)
-      );
+      next(createHttpError(404, `Post with id ${req.params.blogId} not found!`))
     }
   } catch (error) {
     next(error);
@@ -87,7 +78,7 @@ const updateComment = async (req, res, next) => {
     const blog = await BlogModel.findById(req.params.blogId);
 
     if (blog) {
-      index = blog.comments.findIndex((b) => b._id === req.params.commentId);
+     const  index = blog.comments.findIndex((b) => b._id.toString() === req.params.commentId);
 
       if (index !== -1) {
         blog.comments[index] = {
@@ -112,11 +103,11 @@ const deleteComment = async (req, res, next) => {
   try {
     const modifiedBlog = await BlogModel.findByIdAndUpdate(
       req.params.blogId, // WHO
-      { $pull: { comments: { _id: req.params.commentId } } }, // HOW we want to modify the user (remove a specified item from the purchaseHistory array)
-      { new: true } // OPTIONS
+      { $pull: { comments: { _id: req.params.commentId } } }, // how we want to modify the comments
+      { new: true } // opts
     );
     if (modifiedBlog) {
-      res.status(204).send(modifiedBlog);
+      res.send({modifiedBlog});
     } else {
       next(
         createHttpError(404, `Comment with id ${req.params.blogId} not found!`)

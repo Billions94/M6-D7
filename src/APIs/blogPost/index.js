@@ -133,6 +133,8 @@ blogPostRouter.post('/:blogId/comments', commentsHandler.createComment)
 
 blogPostRouter.get('/:blogId/comments/:commentId', commentsHandler.getById)
 
+blogPostRouter.put('/:blogId/comments/:commentId', commentsHandler.updateComment)
+
 blogPostRouter.delete('/:blogId/comments/:commentId', commentsHandler.deleteComment)
 
 export default blogPostRouter
