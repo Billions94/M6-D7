@@ -5,6 +5,7 @@ import { v2 as cloudinary } from 'cloudinary'
 import BlogModel from './schema.js'
 import multer from 'multer'
 import q2m from 'query-to-mongo'
+import commentsHandler from '../comments/c-handler.js'
 
 const blogPostRouter = express.Router()
 
@@ -123,5 +124,15 @@ blogPostRouter.delete('/:blogId', async (req, res, next) => {
         next(error)
     }
 })
+
+
+//************************************ COMMENTS CRUD SECTION  ***************************************/
+blogPostRouter.get('/:blogId/comments', commentsHandler.getAll)
+
+blogPostRouter.post('/:blogId/comments', commentsHandler.createComment)
+
+blogPostRouter.get('/:blogId/comments/:commentId', commentsHandler.getById)
+
+blogPostRouter.delete('/:blogId/comments/:commentId', commentsHandler.deleteComment)
 
 export default blogPostRouter

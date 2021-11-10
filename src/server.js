@@ -2,7 +2,7 @@ import express from "express";
 import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import mongoose from "mongoose";
-import blogPostRouter from "./APIs/index.js";
+import blogPostRouter from "./APIs/blogPost/index.js";
 import { badRequest, unAuthorized } from "./errorsHandler.js";
 import { notFound, genericError } from "./errorsHandler.js";
 

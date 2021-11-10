@@ -26,7 +26,8 @@ const blogPostSchema = new Schema(
     content: { type: String, required: true },
     comments: [
       {
-        text: { type: String, required: true }
+        userName: { type: String},
+        text: { type: String},
       }
     ]
   },
