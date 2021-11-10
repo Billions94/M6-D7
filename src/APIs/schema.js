@@ -24,6 +24,11 @@ const blogPostSchema = new Schema(
       },
     },
     content: { type: String, required: true },
+    comments: [
+      {
+        text: { type: String, required: true }
+      }
+    ]
   },
   {
     timestamps: true,
