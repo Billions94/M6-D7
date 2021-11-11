@@ -1,141 +1,67 @@
-import express from 'express'
-import createHttpError from 'http-errors'
-import { CloudinaryStorage } from 'multer-storage-cloudinary'
-import { v2 as cloudinary } from 'cloudinary'
-import BlogModel from './schema.js'
-import multer from 'multer'
-import q2m from 'query-to-mongo'
-import commentsHandler from '../comments/c-handler.js'
+import express from "express";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import { v2 as cloudinary } from "cloudinary";
+import multer from "multer";
+import commentsHandler from "../comments/c-handler.js";
+import blogPostHandler from "./b-handler.js";
 
-const blogPostRouter = express.Router()
+const blogPostRouter = express.Router();
 
 
+//*********************************** BLOG POST CRUD SECTION ********************************//
+
+// IMAGE CLOUD STORAGE
 const cloudinaryStorage = new CloudinaryStorage({
-    cloudinary, // CREDENTIALS, 
-    params: {
-      folder: "alex-blogs-Mongo",
-    },
-  })
+  cloudinary, // CREDENTIALS,
+  params: {
+    folder: "alex-blogs-Mongo",
+  },
+});
 
-// CREATE NEW POST  
-blogPostRouter.post('/', async (req, res, next) => {
-    try {
-        
-        const newPost = new BlogModel(req.body)
-
-        const {_id} = await newPost.save()
-        res.status(201).send({_id})
-    } catch (error) {
-        console.log(error)
-        next(error)
-    }
-})
+// CREATE NEW POST
+blogPostRouter.post("/", blogPostHandler.createBlogPost)
 
 // ADD COVER TO EXISTING POST BY ID
-blogPostRouter.put('/:blogId/upload', multer({ storage: cloudinaryStorage}).single('cover'), async (req, res, next) => {
-    try {
-        const id = req.params.blogId
-        const cover = req.file.path
-        const updatedPost = await BlogModel.findByIdAndUpdate(id, {$set: {cover: cover }}, { new: true })
+blogPostRouter.put(
+  "/:blogId/upload",
+  multer({ storage: cloudinaryStorage }).single("cover"),
+  blogPostHandler.addCover
+);
 
-        if(updatedPost){
-            res.status(203).send(updatedPost)
-        } else {
-            next(createHttpError(404, `post with this id ${id} not found`))
-        }
-    } catch (error) {
-        console.log(error)
-        next(error)
-    }
-})
-
-// GET ALL BLOGPOSTS WITH PAGINATION 
-blogPostRouter.get('/', async (req, res, next) => {
-    try {
-        const mongoQuery = q2m(req.query)
-        console.log(mongoQuery)
-
-        const total = await BlogModel.countDocuments(mongoQuery.criteria)
-        const post = await BlogModel.find(mongoQuery.criteria)
-        .limit(mongoQuery.options.limit)
-        .skip(mongoQuery.options.skip)
-        .sort(mongoQuery.options.sort)
-        .populate({ path: 'author', select: 'firstName lastName' })
-
-        res.send({ links: mongoQuery.links('/posts', total),
-         pageTotal: Math.ceil(total / mongoQuery.options.limit),
-        total, post })
-
-    } catch (error) {
-        console.log(error)
-        next(error)
-    }
-})
+// GET ALL BLOGPOSTS WITH PAGINATION
+blogPostRouter.get("/", blogPostHandler.getAll);
 
 // GET SPECIFY BLOGPOST BY ID
-blogPostRouter.get('/:blogId', async (req, res, next) => {
-    try {
-        const id = req.params.blogId
-
-        const post = await BlogModel.findById(id)
-
-        if(post){
-            res.send(post)
-        } else {
-            next(createHttpError(404, `post with this id ${id} not found`))
-        }
-    } catch (error) {
-        console.log(error)
-        next(error)
-    }
-})
+blogPostRouter.get("/:blogId", blogPostHandler.getById);
 
 // UPDATE SPECIFY POST BY ID
-blogPostRouter.put('/:blogId', async (req, res, next) => {
-    try {
-        const id = req.params.blogId
-
-        const updatedPost = await BlogModel.findByIdAndUpdate(id, req.body, { new: true })
-
-        if(updatedPost){
-            res.status(203).send(updatedPost)
-        } else {
-            next(createHttpError(404, `post with this id ${id} not found`))
-        }
-    } catch (error) {
-        console.log(error)
-        next(error)
-    }
-})
+blogPostRouter.put("/:blogId", blogPostHandler.updateBlogPost);
 
 // DELETE SPECIFY POST BY ID
-blogPostRouter.delete('/:blogId', async (req, res, next) => {
-    try {
-        const id = req.params.blogId
-
-        const deletedPost = await BlogModel.findByIdAndDelete(id)
-
-        if(deletedPost){
-            res.status(204).send()
-        } else {
-            next(createHttpError(404, `post with this id ${id} not found`))
-        }
-    } catch (error) {
-        console.log(error)
-        next(error)
-    }
-})
+blogPostRouter.delete("/:blogId", blogPostHandler.deleteBlogPost);
 
 
-//************************************ COMMENTS CRUD SECTION  ***************************************/
-blogPostRouter.get('/:blogId/comments', commentsHandler.getAll)
 
-blogPostRouter.post('/:blogId/comments', commentsHandler.createComment)
+//*********************************** COMMENTS CRUD SECTION ********************************//
 
-blogPostRouter.get('/:blogId/comments/:commentId', commentsHandler.getById)
+// GET ALL COMMENTS FOR A SPECIFY POST
+blogPostRouter.get("/:blogId/comments", commentsHandler.getAll);
 
-blogPostRouter.put('/:blogId/comments/:commentId', commentsHandler.updateComment)
+// POST A NEW COMMENT
+blogPostRouter.post("/:blogId/comments", commentsHandler.createComment);
 
-blogPostRouter.delete('/:blogId/comments/:commentId', commentsHandler.deleteComment)
+// GET SPECIFIC COMMENT BY ID
+blogPostRouter.get("/:blogId/comments/:commentId", commentsHandler.getById);
 
-export default blogPostRouter
+// UPDATE A COMMENT
+blogPostRouter.put("/:blogId/comments/:commentId", commentsHandler.updateComment);
+
+// DELETE A COMMENT
+blogPostRouter.delete("/:blogId/comments/:commentId", commentsHandler.deleteComment);
+
+//*********************************** BLOG POST LIKE SECTION ********************************//
+
+// POST LIKES
+blogPostRouter.put("/:blogId/likes", blogPostHandler.postLike);
+
+export default blogPostRouter;
