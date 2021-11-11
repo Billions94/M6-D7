@@ -32,7 +32,7 @@ blogPostRouter.post('/', async (req, res, next) => {
 })
 
 // ADD COVER TO EXISTING POST BY ID
-blogPostRouter.put('/:blogId', multer({ storage: cloudinaryStorage}).single('cover'), async (req, res, next) => {
+blogPostRouter.put('/:blogId/upload', multer({ storage: cloudinaryStorage}).single('cover'), async (req, res, next) => {
     try {
         const id = req.params.blogId
         const cover = req.file.path
@@ -60,6 +60,7 @@ blogPostRouter.get('/', async (req, res, next) => {
         .limit(mongoQuery.options.limit)
         .skip(mongoQuery.options.skip)
         .sort(mongoQuery.options.sort)
+        .populate({ path: 'authors', select: 'firstName lastName' })
 
         res.send({ links: mongoQuery.links('/posts', total),
          pageTotal: Math.ceil(total / mongoQuery.options.limit),

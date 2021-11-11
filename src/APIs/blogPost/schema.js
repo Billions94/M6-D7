@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
-const blogPostSchema = new Schema(
+const BlogPostSchema = new Schema(
   {
     category: { type: String, required: true },
     title: { type: String, required: true },
@@ -15,14 +15,7 @@ const blogPostSchema = new Schema(
         unit: { type: Number },
       },
     },
-    author: {
-      type: Object,
-      required: true,
-      nested: {
-        name: { type: String, required: true },
-        avatar: { type: String, required: true },
-      },
-    },
+    authors: { type: Schema.Types.ObjectId, ref: 'Author'},
     content: { type: String, required: true },
     comments: [
       {
@@ -36,4 +29,4 @@ const blogPostSchema = new Schema(
   }
 );
 
-export default model("Blog", blogPostSchema);
+export default model("Blog", BlogPostSchema);

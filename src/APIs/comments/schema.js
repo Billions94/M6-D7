@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
-const commentSchema = new Schema(
+const CommentSchema = new Schema(
     {
         userName: { type: String, required: true },
         text: { type: String, required: true },
@@ -12,4 +12,4 @@ const commentSchema = new Schema(
     }
 )
 
-export default model('Comment', commentSchema)
+export default model('Comment', CommentSchema)
