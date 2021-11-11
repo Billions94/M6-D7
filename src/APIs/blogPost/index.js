@@ -60,7 +60,7 @@ blogPostRouter.get('/', async (req, res, next) => {
         .limit(mongoQuery.options.limit)
         .skip(mongoQuery.options.skip)
         .sort(mongoQuery.options.sort)
-        .populate({ path: 'authors', select: 'firstName lastName' })
+        .populate({ path: 'author', select: 'firstName lastName' })
 
         res.send({ links: mongoQuery.links('/posts', total),
          pageTotal: Math.ceil(total / mongoQuery.options.limit),

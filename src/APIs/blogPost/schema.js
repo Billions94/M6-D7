@@ -15,7 +15,7 @@ const BlogPostSchema = new Schema(
         unit: { type: Number },
       },
     },
-    authors: { type: Schema.Types.ObjectId, ref: 'Author'},
+    author: { type: Schema.Types.ObjectId, ref: 'Author'},
     content: { type: String, required: true },
     comments: [
       {
