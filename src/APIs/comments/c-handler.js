@@ -58,14 +58,23 @@ const getById = async (req, res, next) => {
   try {
     const blog = await BlogModel.findById(req.params.blogId);
     if (blog) {
-      const comments = blog.comments.find((c) => c._id.toString() === req.params.commentId)
+      const comments = blog.comments.find(
+        (c) => c._id.toString() === req.params.commentId
+      );
       if (comments) {
         res.send(comments);
       } else {
-        next(createHttpError(404, `Comment with id ${req.params.blogId} not found!`))
+        next(
+          createHttpError(
+            404,
+            `Comment with id ${req.params.blogId} not found!`
+          )
+        );
       }
     } else {
-      next(createHttpError(404, `Post with id ${req.params.blogId} not found!`))
+      next(
+        createHttpError(404, `Post with id ${req.params.blogId} not found!`)
+      );
     }
   } catch (error) {
     next(error);
@@ -78,7 +87,9 @@ const updateComment = async (req, res, next) => {
     const blog = await BlogModel.findById(req.params.blogId);
 
     if (blog) {
-     const  index = blog.comments.findIndex((b) => b._id.toString() === req.params.commentId);
+      const index = blog.comments.findIndex(
+        (b) => b._id.toString() === req.params.commentId
+      );
 
       if (index !== -1) {
         blog.comments[index] = {
@@ -107,7 +118,7 @@ const deleteComment = async (req, res, next) => {
       { new: true } // opts
     );
     if (modifiedBlog) {
-      res.send({modifiedBlog});
+      res.send({ modifiedBlog });
     } else {
       next(
         createHttpError(404, `Comment with id ${req.params.blogId} not found!`)
@@ -127,3 +138,5 @@ const commentsHandler = {
 };
 
 export default commentsHandler;
+
+

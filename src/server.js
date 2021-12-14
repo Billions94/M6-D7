@@ -3,7 +3,7 @@ import listEndpoints from "express-list-endpoints";
 import cors from "cors";
 import mongoose from "mongoose";
 import { badRequest, unAuthorized } from "./errorsHandler.js";
-import { notFound, genericError } from "./errorsHandler.js";
+import { notFound, genericError, forbiddenHandler } from "./errorsHandler.js";
 import blogPostRouter from "./APIs/blogPost/index.js";
 import authorsRouter from "./APIs/authors/index.js";
 
@@ -18,6 +18,7 @@ server.use("/authors", authorsRouter);
 server.use(badRequest);
 server.use(unAuthorized);
 server.use(notFound);
+server.use(forbiddenHandler);
 server.use(genericError);
 
 const { PORT, MONGO_CONNECTION } = process.env;
