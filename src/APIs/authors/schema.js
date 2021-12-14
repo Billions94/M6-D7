@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import bycrpt from 'bcrypt'
+import bcrypt from 'bcrypt'
 
 const { Schema, model } = mongoose
 
@@ -17,13 +17,16 @@ const AuthorSchema = new Schema(
     }
 )
 
-AuthorSchema.pre('save', async function () {
+AuthorSchema.pre('save', async function (next) {
     const newAuthor = this
-    const plainPW = newAuthor.password
 
+    const plainPw = newAuthor.password
+
+    console.log('=======================> plain password before hash', plainPw)
     if(newAuthor.isModified('password')) {
-        const hash = await bycrpt.hash(plainPW, 10)
+        const hash = await bcrypt.hash(plainPw, 10)
         newAuthor.password = hash
+        console.log('=======================> plain password after hash', hash)
     }
     next()
 })
@@ -39,12 +42,14 @@ AuthorSchema.methods.toJSON = function () {
     return authorObject
 }
 
-AuthorSchema.statics.verifyCredentials = async function (email, plainPW) {
-    const author = this.findOne({ email })
+AuthorSchema.statics.verifyCredentials = async function (email, plainPw) {
+    const author = await this.findOne({ email })
 
     if(author) {
-        const isMatch = await bycrpt.compare(plainPW, author.password)
+        const isMatch = await bcrypt.compare(plainPw, author.password)
         if(isMatch) {
+
+            console.log("matched!!!!")
             return author
         } else {
             return null

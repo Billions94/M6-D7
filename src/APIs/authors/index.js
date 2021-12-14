@@ -10,14 +10,14 @@ authorsRouter.post('/', authorsHandler.createAuthors)
 authorsRouter.get('/', basicAuthentication, authorsHandler.getAll)
 
 authorsRouter.route('/me') 
-.get(basicAuthentication, authorsHandler.getById)
+.get(basicAuthentication, authorsHandler.getUserAuthor)
 .put(basicAuthentication, authorsHandler.updateAuthor)
 .delete(basicAuthentication, authorsHandler.deleteAuthor)
 
 authorsRouter.route('/:authorId') 
-.get(authorsHandler.getById)
-.put(authorsHandler.updateAuthor)
-.delete(authorsHandler.deleteAuthor)
+.get(basicAuthentication, authorsHandler.getById)
+.put(basicAuthentication, adminOnlyMiddleware, authorsHandler.updateAuthor)
+.delete(basicAuthentication, adminOnlyMiddleware, authorsHandler.deleteAuthor)
 
 
 

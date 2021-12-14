@@ -11,10 +11,14 @@ export const basicAuthentication = async (req, res, next) => {
 
         const [email, password] = credentials.split(':')
 
+        console.log(' i am the email', email)
+        console.log(' i am the password', password)
+
         const author = await AuthorModel.verifyCredentials(email, password)
 
         if(author) {
             req.author = author
+            next()
         } else {
             next(createHttpError(401, "Credentials are not correct!"))
         }

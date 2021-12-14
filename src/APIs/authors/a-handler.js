@@ -16,9 +16,26 @@ const createAuthors = async (req, res, next) => {
 
 const getAll = async (req, res, next) => {
     try {
-        const authors = await AuthorModel.find(req.body)
+        const authors = await AuthorModel.find()
         res.send(authors)
     } catch (error) {
+        next(error)
+    }
+}
+
+const getUserAuthor = async (req, res, next) => {
+    try {
+        const id = req.author._id.toString()
+
+        const author = await AuthorModel.findById(id)
+
+        if(author){
+            res.send(author)
+        } else {
+            next(createHttpError(404, `Author with this id ${id} not found`))
+        }
+    } catch (error) {
+        console.log(error)
         next(error)
     }
 }
@@ -36,6 +53,7 @@ const getById = async (req, res, next) => {
             next(createHttpError(404, `Author with this id ${id} not found`))
         }
     } catch (error) {
+        console.log(error)
         next(error)
     }
 }
@@ -44,7 +62,7 @@ const getById = async (req, res, next) => {
 const updateAuthor = async (req, res, next) => {
     try {
 
-        const id = req.params.authorId
+        const id = req.author._id.toString()
         const updatedAuthor = await AuthorModel.findByIdAndUpdate(id, req.body, {new: true})
 
         if(updatedAuthor) {
@@ -60,7 +78,7 @@ const updateAuthor = async (req, res, next) => {
 // DELETE AUTHOR BY ID
 const deleteAuthor = async (req, res, next) => {
     try {
-        const id = req.params.authorId
+        const id = req.author._id.toString()
         const deletedAuthor = await AuthorModel.findByIdAndDelete(id)
 
         if(deletedAuthor) {
@@ -80,6 +98,7 @@ const authorsHandler = {
     getAll,
     getById,
     updateAuthor,
+    getUserAuthor,
     deleteAuthor
 }
 
