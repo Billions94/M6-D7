@@ -4,6 +4,8 @@ import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
 import commentsHandler from "../comments/c-handler.js";
 import blogPostHandler from "./b-handler.js";
+import { basicAuthentication } from '../../Auth/basic.js'
+import { adminOnlyMiddleware } from '../../Auth/admin.js'
 
 const blogPostRouter = express.Router();
 
@@ -30,6 +32,8 @@ blogPostRouter.put(
 
 // GET ALL BLOGPOSTS WITH PAGINATION
 blogPostRouter.get("/", blogPostHandler.getAll);
+
+blogPostRouter.get("/me", basicAuthentication, blogPostHandler.getPostOfAuthor);
 
 // GET SPECIFY BLOGPOST BY ID
 blogPostRouter.get("/:blogId", blogPostHandler.getById);

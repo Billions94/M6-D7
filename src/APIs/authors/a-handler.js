@@ -1,5 +1,6 @@
 import AuthorModel from './schema.js'
 import createHttpError from "http-errors";
+import BlogModel from '../blogPost/schema.js'
 
 // CREATE NEW AUTHORS
 const createAuthors = async (req, res, next) => {
@@ -22,6 +23,8 @@ const getAll = async (req, res, next) => {
         next(error)
     }
 }
+
+
 
 const getUserAuthor = async (req, res, next) => {
     try {
