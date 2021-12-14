@@ -25,6 +25,21 @@ const getAll = async (req, res, next) => {
 }
 
 
+// Get all blogPosts from a specify Author
+const getPostOfAuthor = async (req, res, next) => {
+    try {
+        const id = req.author._id.toString()
+        const posts = await BlogModel.find({author: id})
+        if(posts.length > 0) {
+          res.status(200).send({ success: true, data: posts });
+        } else {
+          res.status(404).send({ success: true, message: "No articles yet" });
+        }
+    } catch (error) {
+        next(error)
+    }
+  }
+
 
 const getUserAuthor = async (req, res, next) => {
     try {
@@ -99,6 +114,7 @@ const deleteAuthor = async (req, res, next) => {
 const authorsHandler = {
     createAuthors,
     getAll,
+    getPostOfAuthor,
     getById,
     updateAuthor,
     getUserAuthor,

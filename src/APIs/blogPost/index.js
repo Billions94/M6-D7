@@ -33,7 +33,6 @@ blogPostRouter.put(
 // GET ALL BLOGPOSTS WITH PAGINATION
 blogPostRouter.get("/", blogPostHandler.getAll);
 
-blogPostRouter.get("/me", basicAuthentication, blogPostHandler.getPostOfAuthor);
 
 // GET SPECIFY BLOGPOST BY ID
 blogPostRouter.get("/:blogId", blogPostHandler.getById);

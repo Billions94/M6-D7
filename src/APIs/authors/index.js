@@ -9,6 +9,8 @@ authorsRouter.post('/', authorsHandler.createAuthors)
 
 authorsRouter.get('/', basicAuthentication, authorsHandler.getAll)
 
+authorsRouter.get('/me/stories', basicAuthentication, authorsHandler.getPostOfAuthor)
+
 authorsRouter.route('/me') 
 .get(basicAuthentication, authorsHandler.getUserAuthor)
 .put(basicAuthentication, authorsHandler.updateAuthor)
