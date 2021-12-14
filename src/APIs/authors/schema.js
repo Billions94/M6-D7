@@ -48,7 +48,6 @@ AuthorSchema.statics.verifyCredentials = async function (email, plainPw) {
     if(author) {
         const isMatch = await bcrypt.compare(plainPw, author.password)
         if(isMatch) {
-
             console.log("matched!!!!")
             return author
         } else {
