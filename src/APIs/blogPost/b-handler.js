@@ -2,14 +2,23 @@ import BlogModel from "./schema.js";
 import createHttpError from "http-errors";
 import q2m from "query-to-mongo";
 import mongoose from "mongoose";
+import AuthorModel from "../authors/schema.js"
 
 // CREATE BLOG POST
 const createBlogPost = async (req, res, next) => {
   try {
-    const newPost = new BlogModel(req.body);
 
+    const authorId = req.params.id
+    const author = await AuthorModel.findById(authorId)
+
+    const newPost = new BlogModel(req.body);
+    newPost.author = author._id
     const { _id } = await newPost.save();
-    res.status(201).send({ _id });
+    if(newPost) {
+      res.status(201).send({ _id });
+    } else {
+      next(createHttpError(404, `Unable to create Post`))
+    }
   } catch (error) {
     console.log(error);
     next(error);

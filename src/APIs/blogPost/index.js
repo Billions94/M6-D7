@@ -21,7 +21,7 @@ const cloudinaryStorage = new CloudinaryStorage({
 });
 
 // CREATE NEW POST
-blogPostRouter.post("/", blogPostHandler.createBlogPost)
+blogPostRouter.post("/:id", blogPostHandler.createBlogPost)
 
 // ADD COVER TO EXISTING POST BY ID
 blogPostRouter.put(
