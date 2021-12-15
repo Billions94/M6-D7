@@ -74,4 +74,4 @@ export const refreshTokens = async actualRefreshToken => {
     } catch (error) {
       throw new Error("Token not valid!")
     }
-  }
+}

@@ -22,8 +22,8 @@ const authorLogin = async (req, res, next) => {
     const author = await AuthorModel.verifyCredentials(email, password);
 
     if (author) {
-      const token = await tokenGenerator(author);
-      res.send({ token });
+      const { accessToken, refreshToken } = await tokenGenerator(author);
+      res.send({ accessToken, refreshToken });
     } else {
       next(createHttpError(401, "Credentials not ok!"));
     }
