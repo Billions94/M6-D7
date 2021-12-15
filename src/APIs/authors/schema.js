@@ -10,6 +10,7 @@ const AuthorSchema = new Schema(
         email : { type: String, required: true, unique: true },
         password : { type: String, required: true },
         role: { type: String, default: "User", enum: ["User", "Admin"] },
+        refreshToken: { type: String },
 
     },
     {
@@ -38,6 +39,7 @@ AuthorSchema.methods.toJSON = function () {
     const authorObject = authorDoc.toObject()
     delete authorObject.password
     delete authorObject.__v
+    delete userObject.refreshToken
 
     return authorObject
 }

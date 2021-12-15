@@ -10,6 +10,10 @@ authorsRouter.post('/register', authorsHandler.createAuthors)
 
 authorsRouter.post('/login', authorsHandler.authorLogin)
 
+authorsRouter.post('/refreshToken', authorsHandler.refreshToken)
+
+authorsRouter.post('/logout', authorsHandler.logout)
+
 authorsRouter.get('/', tokenAuth, authorsHandler.getAll)
 
 authorsRouter.get('/me/stories', tokenAuth, authorsHandler.getPostOfAuthor)
