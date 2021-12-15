@@ -1,25 +1,28 @@
 import express from 'express'
 import authorsHandler from './a-handler.js'
-import { basicAuthentication } from '../../Auth/basic.js'
+import { tokenAuth } from '../../Auth/tokenAuth.js'
 import { adminOnlyMiddleware } from '../../Auth/admin.js'
+
 
 const authorsRouter = express.Router()
 
-authorsRouter.post('/', authorsHandler.createAuthors)
+authorsRouter.post('/register', authorsHandler.createAuthors)
 
-authorsRouter.get('/', basicAuthentication, authorsHandler.getAll)
+authorsRouter.post('/login', authorsHandler.authorLogin)
 
-authorsRouter.get('/me/stories', basicAuthentication, authorsHandler.getPostOfAuthor)
+authorsRouter.get('/', tokenAuth, authorsHandler.getAll)
+
+authorsRouter.get('/me/stories', tokenAuth, authorsHandler.getPostOfAuthor)
 
 authorsRouter.route('/me') 
-.get(basicAuthentication, authorsHandler.getUserAuthor)
-.put(basicAuthentication, authorsHandler.updateAuthor)
-.delete(basicAuthentication, authorsHandler.deleteAuthor)
+.get(tokenAuth, authorsHandler.getUserAuthor)
+.put(tokenAuth, authorsHandler.updateAuthor)
+.delete(tokenAuth, authorsHandler.deleteAuthor)
 
 authorsRouter.route('/:authorId') 
-.get(basicAuthentication, authorsHandler.getById)
-.put(basicAuthentication, adminOnlyMiddleware, authorsHandler.updateAuthor)
-.delete(basicAuthentication, adminOnlyMiddleware, authorsHandler.deleteAuthor)
+.get(tokenAuth, authorsHandler.getById)
+.put(tokenAuth, adminOnlyMiddleware, authorsHandler.updateAuthor)
+.delete(tokenAuth, adminOnlyMiddleware, authorsHandler.deleteAuthor)
 
 
 

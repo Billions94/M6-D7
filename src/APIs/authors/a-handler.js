@@ -1,13 +1,31 @@
 import AuthorModel from './schema.js'
 import createHttpError from "http-errors";
 import BlogModel from '../blogPost/schema.js'
-
+import { tokenGenerator } from '../../Auth/authTools.js'
 // CREATE NEW AUTHORS
 const createAuthors = async (req, res, next) => {
     try {
         const newAuthor = new AuthorModel(req.body)
         const {_id} = await newAuthor.save()
         res.status(201).send({_id})
+    } catch (error) {
+        next(error)
+    }
+}
+
+// Author login
+const authorLogin = async (req, res, next) => {
+    try {
+        const { email, password } = req.body
+
+        const author = await AuthorModel.verifyCredentials(email, password)
+
+        if(author) {
+            const token = await tokenGenerator(author)
+            res.send({ token })
+        } else {
+            next(createHttpError(401, "Credentials not ok!"))
+        }
     } catch (error) {
         next(error)
     }
@@ -112,6 +130,7 @@ const deleteAuthor = async (req, res, next) => {
 
 
 const authorsHandler = {
+    authorLogin,
     createAuthors,
     getAll,
     getPostOfAuthor,
