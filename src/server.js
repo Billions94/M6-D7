@@ -6,15 +6,23 @@ import { badRequest, unAuthorized } from "./errorsHandler.js";
 import { notFound, genericError, forbiddenHandler } from "./errorsHandler.js";
 import blogPostRouter from "./APIs/blogPost/index.js";
 import authorsRouter from "./APIs/authors/index.js";
+import passport from "passport"
+import googleCloudStrategy from "../src/Auth/Oauth.js"
 
 const server = express();
 
+
+// Middlewares
+passport.use("google", googleCloudStrategy)
 server.use(cors());
 server.use(express.json());
+server.use(passport.initialize());
+
+// Endpoints
 server.use("/posts", blogPostRouter);
 server.use("/authors", authorsRouter);
 
-
+// Error Middlewares
 server.use(badRequest);
 server.use(unAuthorized);
 server.use(notFound);

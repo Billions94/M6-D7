@@ -11,6 +11,7 @@ const AuthorSchema = new Schema(
         password : { type: String, required: true },
         role: { type: String, default: "User", enum: ["User", "Admin"] },
         refreshToken: { type: String },
+        googleId: { type: String }
 
     },
     {
