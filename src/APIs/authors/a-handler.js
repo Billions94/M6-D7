@@ -53,8 +53,8 @@ const refreshToken = async (req, res, next) => {
 // Logout
 const logout = async (req, res, next) => {
   try {
-    req.user.refreshToken = null;
-    await req.user.save();
+    req.author.refreshToken = null;
+    await req.author.save();
     res.send();
   } catch (error) {
     next(error);
