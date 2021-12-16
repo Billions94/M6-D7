@@ -12,12 +12,13 @@ const googleCloudStrategy = new GoogleStrategy({
 },
 async (accessToken, refreshToken, profile, passportNext) => {
     try {
-        
+        console.log('===================>', profile)
         const author = await AuthorModel.findOne({ googleId: profile.id })
 
         if(author) {
             const tokens = await tokenGenerator(author)
             passportNext(null, { tokens })
+            
         } else {
             const newAuthor = new AuthorModel({
                 firstName: profile.name.givenName,

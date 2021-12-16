@@ -8,7 +8,7 @@ const AuthorSchema = new Schema(
         firstName : { type: String, required: true },
         lastName : { type: String, required: true },
         email : { type: String, required: true, unique: true },
-        password : { type: String, required: true },
+        password : { type: String },
         role: { type: String, default: "User", enum: ["User", "Admin"] },
         refreshToken: { type: String },
         googleId: { type: String }

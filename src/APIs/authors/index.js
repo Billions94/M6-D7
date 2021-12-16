@@ -21,17 +21,16 @@ authorsRouter.get('/', tokenAuth, authorsHandler.getAll)
 
 authorsRouter.get('/googleLogin', passport.authenticate('google', { scope: ["profile", "email"] }))
 
-authorsRouter.get("/googleRedirect", passport.authenticate("google"), async (req, res, next) => {
-    // This endpoint URL needs to match EXACTLY to the one configured on google.cloud dashboard
+authorsRouter.get('/googleRedirect', passport.authenticate('google'), async (req, res, next) => {
     try {
-      // Thanks to passport.serialize we are going to receive the tokens in the request
-      console.log("TOKENS: ", req.authors.tokens)
-  
-      res.redirect(`${FE_URL}?accessToken=${req.authors.tokens.accessToken}&refreshToken=${req.authors.tokens.refreshToken}`)
+        res.redirect(`${FE_URL}?accessToken=${req.user.tokens.accessToken}&refreshToken=${req.user.tokens.refreshToken}`)
     } catch (error) {
-      next(error)
+        next(error)
     }
 })
+
+
+
 
 authorsRouter.get('/me/stories', tokenAuth, authorsHandler.getPostOfAuthor)
 
